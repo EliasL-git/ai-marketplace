@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Model Marketplace</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #1a1a2e; color: #fff; margin: 0; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; }
+        .header h1 { color: #8774e1; font-size: 48px; margin: 0; }
+        .header p { color: #aaa; font-size: 18px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .card { background: #16213e; border-radius: 12px; padding: 24px; margin: 20px 0; }
+        .card h2 { color: #8774e1; margin-top: 0; }
+        .keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+        .key-card { background: #0f3460; border-radius: 8px; padding: 16px; }
+        .key-card h3 { margin: 0 0 8px 0; color: #e94560; }
+        .key-card .price { color: #8774e1; font-size: 24px; font-weight: bold; }
+        .key-card .model { color: #aaa; font-size: 14px; }
+        .key-card button { background: #8774e1; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .stats { display: flex; gap: 20px; justify-content: center; }
+        .stat { text-align: center; padding: 20px; background: #16213e; border-radius: 8px; }
+        .stat .value { font-size: 32px; color: #8774e1; font-weight: bold; }
+        .stat .label { color: #aaa; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ AI Model Marketplace</h1>
+        <p>Buy and sell AI API access directly between users</p>
+    </div>
+    
+    <div class="container">
+        <div class="stats">
+            <div class="stat">
+                <div class="value">2,543</div>
+                <div class="label">Active Keys</div>
+            </div>
+            <div class="stat">
+                <div class="value">12,847</div>
+                <div class="label">Total Transactions</div>
+            </div>
+            <div class="stat">
+                <div class="value">847</div>
+                <div class="label">Active Users</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Available Models</h2>
+            <div class="keys">
+                <div class="key-card">
+                    <h3>deepseek-chat</h3>
+                    <div class="model">Provider: DeepSeek</div>
+                    <div class="price">1.0 PTS / 1k tokens</div>
+                    <div class="model">100,000 tokens available</div>
+                    <button>Buy Tokens</button>
+                </div>
+                <div class="key-card">
+                    <h3>gpt-4</h3>
+                    <div class="model">Provider: OpenAI</div>
+                    <div class="price">0.02 PTS / 1k tokens</div>
+                    <div class="model">50,000 tokens available</div>
+                    <button>Buy Tokens</button>
+                </div>
+                <div class="key-card">
+                    <h3>claude-3-opus</h3>
+                    <div class="model">Provider: Anthropic</div>
+                    <div class="price">0.015 PTS / 1k tokens</div>
+                    <div class="model">75,000 tokens available</div>
+                    <button>Buy Tokens</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>How It Works</h2>
+            <p><strong>1.</strong> Seller lists their API key with a specific model and PTS price</p>
+            <p><strong>2.</strong> Buyer browses keys, filters by model, and purchases tokens</p>
+            <p><strong>3.</strong> Buyer uses tokens to call the API - seller earns PTS instantly</p>
+            <p><strong>4.</strong> PTS can be spent on any other key in the marketplace</p>
+        </div>
+    </div>
+</body>
+</html>
