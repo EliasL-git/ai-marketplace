@@ -1,0 +1,63 @@
+{
+  "items": {
+    "wood_item": { "id": "wood_item", "name": "Wood", "type": "resource", "rarity": "common", "sprite": "🌲", "description": "Basic building material", "stackable": true, "maxStack": 64, "toolType": null, "toolLevel": 0 },
+    "stone_item": { "id": "stone_item", "name": "Stone", "type": "resource", "rarity": "common", "sprite": "🪨", "description": "Basic mining material", "stackable": true, "maxStack": 64, "toolType": null, "toolLevel": 0 },
+    "coal_item": { "id": "coal_item", "name": "Coal", "type": "resource", "rarity": "common", "sprite": "⚫", "description": "Fuel source", "stackable": true, "maxStack": 64, "toolType": null, "toolLevel": 0 },
+    "copper_ore_item": { "id": "copper_ore_item", "name": "Copper Ore", "type": "resource", "rarity": "uncommon", "sprite": "🟡", "description": "Refine into copper ingots", "stackable": true, "maxStack": 64, "toolType": null, "toolLevel": 0 },
+    "iron_ore_item": { "id": "iron_ore_item", "name": "Iron Ore", "type": "resource", "rarity": "rare", "sprite": "⚪", "description": "Rare metal", "stackable": true, "maxStack": 64, "toolType": null, "toolLevel": 0 },
+    "silver_ore_item": { "id": "silver_ore_item", "name": "Silver Ore", "type": "resource", "rarity": "epic", "sprite": "🪙", "description": "Valuable metal", "stackable": true, "maxStack": 64, "toolType": null, "toolLevel": 0 },
+    "ember_ore_item": { "id": "ember_ore_item", "name": "Ember Ore", "type": "resource", "rarity": "legendary", "sprite": "🔥", "description": "Powerful core material", "stackable": true, "maxStack": 64, "toolType": null, "toolLevel": 0 }
+  },
+  "tools": {
+    "wooden_pickaxe": { "id": "wooden_pickaxe", "name": "Wooden Pickaxe", "type": "tool", "rarity": "common", "sprite": "⛏️", "description": "Basic mining tool", "stackable": false, "maxStack": 1, "toolType": "pickaxe", "toolLevel": 1, "durability": 100, "speed": 1.0 },
+    "stone_pickaxe": { "id": "stone_pickaxe", "name": "Stone Pickaxe", "type": "tool", "rarity": "common", "sprite": "⛏️", "description": "Improved mining tool", "stackable": false, "maxStack": 1, "toolType": "pickaxe", "toolLevel": 2, "durability": 150, "speed": 1.5 },
+    "iron_pickaxe": { "id": "iron_pickaxe", "name": "Iron Pickaxe", "type": "tool", "rarity": "rare", "sprite": "⛏️", "description": "Strong mining tool", "stackable": false, "maxStack": 1, "toolType": "pickaxe", "toolLevel": 3, "durability": 200, "speed": 2.0 }
+  },
+  "weapons": {
+    "wooden_sword": { "id": "wooden_sword", "name": "Wooden Sword", "type": "weapon", "rarity": "common", "sprite": "🗡️", "description": "Basic weapon", "stackable": false, "maxStack": 1, "damage": 5, "attackSpeed": 1.0, "range": 32 }
+  },
+  "craftingRecipes": [
+    {
+      "id": "recipe_wooden_pickaxe",
+      "outputId": "wooden_pickaxe",
+      "outputQuantity": 1,
+      "inputs": [
+        { "itemId": "wood_item", "quantity": 3 },
+        { "itemId": "coal_item", "quantity": 1 }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "type": "ashling",
+      "health": 20,
+      "maxHealth": 20,
+      "damage": 5,
+      "speed": 1.2,
+      "behavior": "basic",
+      "aggroRange": 100,
+      "attackRange": 32,
+      "loot": ["coal_item"]
+    }
+  ],
+  "bosses": [
+    {
+      "id": "ashen_heart",
+      "type": "ashen_heart",
+      "name": "THE ASHEN HEART",
+      "health": 500,
+      "maxHealth": 500,
+      "damage": 25,
+      "speed": 1.0,
+      "attackPatterns": ["ranged", "summon"],
+      "drops": ["ember_ore_item"]
+    }
+  ],
+  "biomes": {
+    "forest": { "color": "#228B22", "blocks": ["grass", "dirt", "tree"], "enemies": ["ashling"] },
+    "desert": { "color": "#F4A460", "blocks": ["sand", "ash"], "enemies": ["ember_wisp"] },
+    "frozen": { "color": "#87CEEB", "blocks": ["ice", "snow"], "enemies": ["frost_maw"] },
+    "ashlands": { "color": "#8B0000", "blocks": ["ash", "ember_ore"], "enemies": ["ruin_guardian"] },
+    "ruins": { "color": "#8B4513", "blocks": ["ancient_stone", "crystal"], "enemies": ["cave_stalker"] }
+  }
+}

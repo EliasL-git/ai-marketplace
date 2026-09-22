@@ -1,0 +1,253 @@
+reference: 'file:./schema.prisma'
+
+generator client {
+  provider = 'prisma-client-js'
+  output   = '../node_modules/@prisma/client'
+}
+
+datasource db {
+  provider = 'sqlite'
+  url      = env('DATABASE_URL')
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  passwordHash  String
+  player        Player?
+  worlds        World[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model World {
+  id           String        @id @default(cuid())
+  userId       String
+  name         String
+  seed         String
+  width        Int           @default(256)
+  height       Int           @default(256)
+  player       Player?
+  blocks       WorldBlock[]
+  enemies      Enemy[]
+  structures   Structure[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+}
+
+model Player {
+  id           String           @id @default(cuid())
+  userId       String           @unique
+  worldId      String           @unique
+  x            Float            @default(64.0)
+  y            Float            @default(64.0)
+  health       Int              @default(100)
+  maxHealth    Int              @default(100)
+  level        Int              @default(1)
+  experience   Int              @default(0)
+  inventory    Inventory        @relation(fields: [inventoryId], references: [id])
+  inventoryId  String           @unique
+  equipment    PlayerEquipment?
+  world        World            @relation(fields: [worldId], references: [id])
+  user         User             @relation(fields: [userId], references: [id])
+  defeatedBosses PlayerBossProgress[]
+  discoveries  PlayerDiscovery[]
+  quests       PlayerQuest[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  
+  @@index([userId])
+  @@index([worldId])
+}
+
+model Inventory {
+  id       String        @id @default(cuid())
+  items    InventoryItem[]
+  playerId String        @unique
+  player   Player        @relation(fields: [playerId], references: [id])
+}
+
+model InventoryItem {
+  id        String   @id @default(cuid())
+  inventoryId String
+  itemId    String
+  quantity  Int      @default(1)
+  slot      Int
+  inventory Inventory @relation(fields: [inventoryId], references: [id])
+  item      Item     @relation(fields: [itemId], references: [id])
+  
+  @@index([inventoryId])
+  @@index([itemId])
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // resource, tool, weapon, armor, consumable, building
+  rarity      String   // common, uncommon, rare, epic, legendary
+  sprite      String
+  description String?
+  stackable   Boolean  @default(true)
+  maxStack    Int      @default(64)
+  items       InventoryItem[]
+  recipeFor   CraftingRecipe[] @relation("OutputItem")
+  recipeInput CraftingRecipe[] @relation("InputItem")
+}
+
+model CraftingRecipe {
+  id          String     @id @default(cuid())
+  outputItemId String
+  outputQuantity Int
+  inputItems    RecipeIngredient[]
+  requiredTool  String?
+  workbenchId   String?
+}
+
+model RecipeIngredient {
+  id         String   @id @default(cuid())
+  recipeId   String
+  itemId     String
+  quantity   Int
+  recipe     CraftingRecipe @relation(fields: [recipeId], references: [id])
+  item       Item           @relation(fields: [itemId], references: [id])
+}
+
+model WorldBlock {
+  id      String @id @default(cuid())
+  worldId String
+  x       Int
+  y       Int
+  type    String // air, grass, dirt, stone, ash, sand, ice, snow, clay, copper_ore, iron_ore, silver_ore, ember_ore, crystal, wood, ancient_stone
+  hardness Float @default(1.0) // 0 = air, higher = harder to mine
+  hardnessRemaining Float @default(1.0)
+  
+  @@index([worldId, x, y])
+}
+
+model Enemy {
+  id           String   @id @default(cuid())
+  worldId      String
+  x            Float
+  y            Float
+  type         String   // ashling, cave_stalker, ember_wisp, frost_maw, ruin_guardian
+  health       Int
+  maxHealth    Int
+  damage       Int
+  speed        Float
+  behavior     String   // basic, flying, patrol
+  state        String   // idle, roaming, attacking, chasing, dead
+  aggroRange   Float    @default(100)
+  attackRange  Float    @default(32)
+  lastAction   Float    @default(0)
+  loot         String   @default("") // comma-separated item IDs
+  
+  world World @relation(fields: [worldId], references: [id])
+  @@index([worldId])
+}
+
+model Boss {
+  id           String   @id @default(cuid())
+  worldId      String
+  x            Float
+  y            Float
+  type         String   // ashen_heart, frozen_colossus, hollow_machine
+  health       Int
+  maxHealth    Int
+  phase        Int      @default(1)
+  state        String   // spawning, phase1, phase2, phase3, dead
+  damage       Int
+  speed        Float
+  attackPattern String
+  defeatedBy   String?  // player ID
+  defeatedAt   DateTime?
+  
+  world World @relation(fields: [worldId], references: [id])
+  @@index([worldId])
+}
+
+model PlayerEquipment {
+  id           String   @id @default(cuid())
+  playerId     String
+  helmet       String?  // item ID
+  chestplate   String?
+  leggings     String?
+  boots        String?
+  weapon       String?
+  offhand      String?
+  accessory1   String?
+  accessory2   String?
+  player       Player   @relation(fields: [playerId], references: [id])
+}
+
+model PlayerBossProgress {
+  id        String   @id @default(cuid())
+  playerId  String
+  bossId    String
+  defeatedAt DateTime @default(now())
+  player    Player   @relation(fields: [playerId], references: [id])
+  
+  @@index([playerId, bossId])
+}
+
+model Quest {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  requirements String  // JSON string
+  rewards     String   // JSON string
+  tier        Int      @default(1) // 1-5
+  biome       String?  // forest, desert, frozen, ashlands, ruins
+  type        String   // collect, craft, defeat, explore, discover
+}
+
+model PlayerQuest {
+  id           String   @id @default(cuid())
+  playerId     String
+  questId      String
+  completed    Boolean  @default(false)
+  progress     Int      @default(0)
+  claimed      Boolean  @default(false)
+  player       Player   @relation(fields: [playerId], references: [id])
+  quest        Quest    @relation(fields: [questId], references: [id])
+  
+  @@index([playerId, questId])
+}
+
+model Discovery {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  location    String   // biome, structure, etc.
+  x           Float?
+  y           Float?
+  icon        String
+}
+
+model PlayerDiscovery {
+  id         String   @id @default(cuid())
+  playerId   String
+  discoveryId String
+  discoveredAt DateTime @default(now())
+  player     Player   @relation(fields: [playerId], references: [id])
+  discovery  Discovery  @relation(fields: [discoveryId], references: [id])
+  
+  @@index([playerId, discoveryId])
+}
+
+model Structure {
+  id       String   @id @default(cuid())
+  worldId  String
+  type     String   // abandoned_house, ruined_lab, underground_shrine, ancient_vault, broken_tower
+  x        Int
+  y        Int
+  width    Int
+  height   Int
+  contents String   // JSON string: chest items, enemies, loot
+  visited  Boolean  @default(false)
+  
+  world World @relation(fields: [worldId], references: [id])
+  @@index([worldId, x, y])
+}

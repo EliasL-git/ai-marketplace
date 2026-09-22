@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  game-server:
+    build: ./server
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server:/app/server
+      - /app/server/node_modules
+    environment:
+      - DATABASE_URL=sqlite:/app/data/game.db
+    restart: unless-stopped
+
+  game-client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app/client
+      - /app/client/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    restart: unless-stopped
